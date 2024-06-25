@@ -41,7 +41,7 @@ async function generateSummary(content: string, template: string) {
 
     const model = new ChatOpenAI({
         openAIApiKey: process.env.OPENAI_API_KEY,
-        modelName: process.env.OPENAI_MODEL ?? "davinci-002",
+        modelName: process.env.OPENAI_MODEL ?? "gpt-4o",
         temperature: process.env.OPENAI_TEMPERATURE
             ? parseFloat(process.env.OPENAI_TEMPERATURE)
             : 0.7,
@@ -92,32 +92,22 @@ export async function POST(req: NextRequest) {
     const { videoId } = body;
 
     let transcript: Awaited<ReturnType<typeof fetchTranscript>>;
+ console.log("Step 1:", videoId);
 
+ 
     try {
         transcript = await fetchTranscript(videoId);
-
+console.log("step 2:",transcript)
         const transformedData = transformData(transcript);
-
+        console.log("step 3:",transformData)
         let summary: Awaited<ReturnType<typeof generateSummary>>;
 
         summary = await generateSummary(transformedData.text, TEMPLATE);
+        console.log('step 4: ', summary)
         return new Response(JSON.stringify({
-            data: `**Title:** Quickstart Guide to Launching Your Project with Strapi in Just 3 Minutes
-
-**YouTube Video Description:**
-
-**Heading:** Fast Track Your Development with Strapi: A 3-Minute Quickstart Guide
-
-**Introduction:**
-Join me today as we explore how to get your project up and running with Strapi in just three minutes! Strapi is an open-source headless CMS that simplifies the process of building, managing, and deploying content. Whether you're a developer, content creator, or project manager, this guide is designed to help you kickstart your project effortlessly.
-
-**Sections:**
-
-- **Setting Up Your Strapi Project:**
-  - Learn how to create a new Strapi project using the quickstart command to leverage default configurations, including setting up an SQLite database.
-
-Rest of summary...`, error: null
+            data: summary, error: null
         }));
+    
 
     } catch (error) {
         console.error("Error processing request:", error);

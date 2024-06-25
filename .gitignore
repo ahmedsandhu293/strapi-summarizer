@@ -6,6 +6,14 @@
 .pnp.js
 .yarn/install-state.gz
 
+# Yarn Berry (Yarn 2)
+.yarn/*
+!.yarn/releases
+!.yarn/plugins
+!.yarn/sdks
+!.yarn/versions
+.pnp.*
+
 # testing
 /coverage
 
@@ -27,7 +35,7 @@ yarn-error.log*
 
 # local env files
 .env*.local
-.env.local
+.env
 
 # vercel
 .vercel
